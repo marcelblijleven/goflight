@@ -21,7 +21,6 @@ jobs:
       - name: Setup Node.js for use with actions
         uses: actions/setup-node@v1.1.0
         with:
-          # Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0, lts
           version: 10.x
       - name: Install standard-version package
         run: npm i standard-version
@@ -36,14 +35,14 @@ jobs:
         run: echo ::set-env name=version_number::$(node -p "require('./version').version")
       
       - name: Set release body
-        run: echo ::set-env name=release_body::$(${{ github.event.head_commit.message }} | sed 1d)
+        run: echo ::set-env name=release_body::$("${{ github.event.head_commit.message }}" | sed 1d)
       
       - name: Create github release
         if: github.ref == 'refs/heads/master'
         id: create_release
         uses: actions/create-release@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is automatically provided
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.version_number }}
           release_name: Release v${{ env.version_number }}
