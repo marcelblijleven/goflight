@@ -22,8 +22,12 @@ jobs:
         uses: actions/setup-node@v1.1.0
         with:
           version: 10.x
+
       - name: Install standard-version package
         run: npm i standard-version
+
+      - name: Retrieving current version from version.json
+        run: echo ::set-env name=current_version_number::$(node -p "require('./version').version")
       
       - name: Create .versionrc for standard-version
         run: echo "{\"bumpFiles\":[{\"filename\":\"version.json\", \"type\":\"json\"}]}" > .versionrc
@@ -31,24 +35,25 @@ jobs:
       - name: Create release with standard-version
         run: ./node_modules/.bin/standard-version 
       
-      - name: Retrieving version from version.json
-        run: echo ::set-env name=version_number::$(node -p "require('./version').version")
+      - name: Retrieving new version from version.json
+        run: echo ::set-env name=new_version_number::$(node -p "require('./version').version")
       
       - name: Set release body
         run: echo ::set-env name=release_body::$("${{ github.event.head_commit.message }}" | sed 1d)
       
       - name: Push changed files
+        if: ${{ env.current_version_number }} != ${{ env.new_version_number }}
         run: git push origin master
 
       - name: Create github release
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && ${{ env.current_version_number }} != ${{ env.new_version_number }}
         id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.version_number }}
-          release_name: Release v${{ env.version_number }}
+          tag_name: v${{ env.new_version_number }}
+          release_name: Release v${{ env.new_version_number }}
           body: |
             This is an automated release.
             ${{ env.release_body }}
