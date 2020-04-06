@@ -9,7 +9,7 @@ package main
 
 import (
 	"fmt"
-"github.com/marcelblijleven/goflight"
+	"github.com/marcelblijleven/goflight"
 	"net/http"
 	"time"
 )
