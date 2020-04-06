@@ -37,6 +37,9 @@ jobs:
       - name: Set release body
         run: echo ::set-env name=release_body::$("${{ github.event.head_commit.message }}" | sed 1d)
       
+      - name: Push changed files
+        run: git push origin master
+
       - name: Create github release
         if: github.ref == 'refs/heads/master'
         id: create_release
