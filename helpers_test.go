@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 )
 
-// HTTPTestClient returns a http client which can be used to stub requests
+// HTTPTestClient returns a http Client which can be used to stub requests
 // it will also return a method to close the internal test server
 func HTTPTestClient(handler http.Handler) (httpTestClient *http.Client, close func()) {
 	server := httptest.NewServer(handler)

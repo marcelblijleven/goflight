@@ -7,9 +7,11 @@ import (
 )
 
 const (
+	// BaseURL is the host of the Opensky API
 	BaseURL = "https://opensky-network.org/api/"
 )
 
+// Client represents the API Client used to communicate with the Opensky API
 type Client struct {
 	httpClient *http.Client
 	baseURL    *url.URL
@@ -19,6 +21,7 @@ type Client struct {
 	States *statesService
 }
 
+// NewClient returns a new *goflight.Client
 func NewClient(username, password string, httpClient *http.Client, host *url.URL) (*Client, error) {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: time.Second * 30}
@@ -45,10 +48,12 @@ func NewClient(username, password string, httpClient *http.Client, host *url.URL
 	return c, nil
 }
 
+// GetBaseURL returns the base url of the Client
 func (c *Client) GetBaseURL() *url.URL {
 	return c.baseURL
 }
 
+// GetCredentials returns the username and password of the Client
 func (c *Client) GetCredentials() (username string, password string) {
 	return c.username, c.password
 }
