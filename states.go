@@ -36,11 +36,13 @@ type StateVector struct {
 	PositionSource int      // Origin of this state’s position: 0 = ADS-B, 1 = ASTERIX, 2 = MLAT
 }
 
+// StatesResponse is the response retrieved from the /api/states/all and /api/states/own endpoints
 type StatesResponse struct {
 	Time   int64         `json:"time"`
 	States []StateVector `json:"states"`
 }
 
+// UnmarshalJSON unmarshals the provided []byte onto a StateVector struct
 func (s *StateVector) UnmarshalJSON(buf []byte) error {
 	tmp := []interface{}{
 		&s.ICAO24,
@@ -103,6 +105,7 @@ func (s *statesService) getStatesRequest(endpoint string, timeParam time.Time, i
 	return req, nil
 }
 
+// GetAllStates returns the response of /api/states/all
 func (s *statesService) GetAllStates(time time.Time, icao24 string) (StatesResponse, error) {
 	endpoint := "states/all"
 	req, err := s.getStatesRequest(endpoint, time, icao24)
@@ -128,7 +131,7 @@ func (s *statesService) GetAllStates(time time.Time, icao24 string) (StatesRespo
 
 	if resp.StatusCode/100 != 2 {
 		if resp.StatusCode == 403 {
-			return statesResponse, UnauthorizedAccessError
+			return statesResponse, ErrUnauthorizedAccess
 		}
 
 		return statesResponse, fmt.Errorf("%v - %v", resp.StatusCode, resp.Status)
@@ -148,6 +151,7 @@ func (s *statesService) GetAllStates(time time.Time, icao24 string) (StatesRespo
 	return statesResponse, nil
 }
 
+// GetOwnStates returns the response of /api/states/own
 func (s *statesService) GetOwnStates(time time.Time, icao24 string) (*StatesResponse, error) {
 	endpoint := "states/all"
 	req, err := s.getStatesRequest(endpoint, time, icao24)
@@ -161,7 +165,7 @@ func (s *statesService) GetOwnStates(time time.Time, icao24 string) (*StatesResp
 
 	if !(okUser && okPass) {
 		// Authentication is required for this endpoint
-		return nil, InvalidCredentialsError
+		return nil, ErrInvalidCredentials
 	}
 
 	req.SetBasicAuth(username, password)
