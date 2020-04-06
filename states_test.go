@@ -83,7 +83,7 @@ func TestStatesService_GetAllStates(t *testing.T) {
 			client, err := goflight.NewClient("", "", mockClient, u)
 
 			if err != nil {
-				t.Fatal("unexpected error in setting up Goflight client")
+				t.Fatal("unexpected error in setting up Goflight Client")
 			}
 
 			response, err := client.States.GetAllStates(tt.timeInput, tt.icao24Input)
@@ -124,7 +124,7 @@ func TestStatesService_GetOwnStates(t *testing.T) {
 			client, err := goflight.NewClient("user", "password", mockClient, u)
 
 			if err != nil {
-				t.Fatal("unexpected error in setting up Goflight client")
+				t.Fatal("unexpected error in setting up Goflight Client")
 			}
 
 			response, err := client.States.GetAllStates(tt.timeInput, tt.icao24Input)
@@ -156,7 +156,7 @@ func TestStatesService_GetOwnStates_Authentication(t *testing.T) {
 	client, err := goflight.NewClient("unauthorizedUser", "secret", mockClient, nil)
 
 	if err != nil {
-		t.Fatal("unexpected error in setting up Goflight client")
+		t.Fatal("unexpected error in setting up Goflight Client")
 	}
 
 	_, err = client.States.GetOwnStates(time.Time{}, "")
@@ -169,12 +169,12 @@ func TestStatesService_GetOwnStates_Authentication(t *testing.T) {
 	client, err = goflight.NewClient("", "", mockClient, nil)
 
 	if err != nil {
-		t.Fatal("unexpected error in setting up Goflight client")
+		t.Fatal("unexpected error in setting up Goflight Client")
 	}
 
 	_, err = client.States.GetOwnStates(time.Time{}, "")
 
-	if !errors.Is(err, goflight.InvalidCredentialsError) {
+	if !errors.Is(err, goflight.ErrInvalidCredentials) {
 		t.Errorf("expected error to be: %v", goflight.UnauthorizedAccessError.Error())
 	}
 }

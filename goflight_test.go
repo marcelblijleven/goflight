@@ -24,7 +24,7 @@ func TestNewClient(t *testing.T) {
 			client, err := goflight.NewClient(tt.username, tt.password, tt.httpClient, tt.host)
 
 			if err != nil {
-				t.Fatal("unexpected error occurred while creating new Goflight client")
+				t.Fatal("unexpected error occurred while creating new Goflight Client")
 			}
 
 			username, password := client.GetCredentials()
@@ -55,7 +55,7 @@ func TestNewClient_CustomHost(t *testing.T) {
 	client, err := goflight.NewClient("", "", nil, u)
 
 	if err != nil {
-		t.Fatal("unexpected error occurred while creating new Goflight client")
+		t.Fatal("unexpected error occurred while creating new Goflight Client")
 	}
 
 	if client.GetBaseURL() != u {

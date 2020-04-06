@@ -1,0 +1,56 @@
+name: Create release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Git
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name $GITHUB_ACTOR
+        
+      - name: Setup Node.js for use with actions
+        uses: actions/setup-node@v1.1.0
+        with:
+          version: 10.x
+      - name: Install standard-version package
+        run: npm i standard-version
+      
+      - name: Create .versionrc for standard-version
+        run: echo "{\"bumpFiles\":[{\"filename\":\"version.json\", \"type\":\"json\"}]}" > .versionrc
+      
+      - name: Create release with standard-version
+        run: ./node_modules/.bin/standard-version 
+      
+      - name: Retrieving version from version.json
+        run: echo ::set-env name=version_number::$(node -p "require('./version').version")
+      
+      - name: Set release body
+        run: echo ::set-env name=release_body::$("${{ github.event.head_commit.message }}" | sed 1d)
+      
+      - name: Push changed files
+        run: git push origin master
+
+      - name: Create github release
+        if: github.ref == 'refs/heads/master'
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.version_number }}
+          release_name: Release v${{ env.version_number }}
+          body: |
+            This is an automated release.
+            ${{ env.release_body }}
+          draft: false
+          prerelease: false

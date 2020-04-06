@@ -1,5 +1,7 @@
 # Goflight
-Go client for the OpenSky REST API
+![](https://goreportcard.com/badge/github.com/marcelblijleven/goflight)
+
+Go client for the [OpenSky REST API](http://opensky-network.org).
 
 ## Example
 Get all states
@@ -30,3 +32,6 @@ func main() {
     fmt.Println(resp.States[0].ICAO24)
 }
 ```
+
+## Disclaimer
+This project is not affiliated with the Opensky Network
