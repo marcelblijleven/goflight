@@ -168,6 +168,10 @@ func TestStatesService_GetOwnStates_Authentication(t *testing.T) {
 	// Check for invalid credentials
 	client, err = goflight.NewClient("", "", mockClient, nil)
 
+	if err != nil {
+		t.Fatal("unexpected error in setting up Goflight client")
+	}
+
 	_, err = client.States.GetOwnStates(time.Time{}, "")
 
 	if !errors.Is(err, goflight.InvalidCredentialsError) {
