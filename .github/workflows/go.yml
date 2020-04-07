@@ -5,8 +5,34 @@ on:
     branches: [ master ]
 
 jobs:
+  test:
+    name: Test
+    env:
+      GOPATH: ${{ github.workspace }}
+      GO111MODULE: off
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+          
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: ./src/github.com/${{ github.repository }}
+          
+      - name: Run tests
+        run: go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+      
+      - name: Upload coverage report to codecov.io
+        run: bash <(curl -s https://codecov.io/bash)
+          
   create_release:
     name: Create release
+    if: contains(github.event_name, 'push')
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
