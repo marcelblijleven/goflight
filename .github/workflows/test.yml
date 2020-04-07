@@ -7,11 +7,11 @@ on:
     branches: [ master ]
 
 jobs:
-  env:
-    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
 
       - name: Set up Go 1.13
