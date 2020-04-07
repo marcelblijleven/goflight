@@ -22,7 +22,6 @@ func main() {
 		"user@email.com",
 		"tops3cr3t",
 		&httpClient,
-        nil,
 	)
 
 	timeParam := time.Now()
