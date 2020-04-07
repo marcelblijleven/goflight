@@ -42,11 +42,11 @@ jobs:
         run: echo ::set-env name=release_body::$(echo "${{ github.event.head_commit.message }}" | sed 1d)
       
       - name: Push changed files
-        if: ${{ "${{ env.current_version_number }}" }} != ${{ "${{ env.new_version_number }}" }}
+        if: env.current_version_number != env.new_version_number
         run: git push origin master
 
       - name: Create github release
-        if: github.ref == 'refs/heads/master' && ${{ "${{ env.current_version_number }}" }} != ${{ "${{ env.new_version_number }}" }}
+        if: github.ref == 'refs/heads/master' && env.current_version_number != env.new_version_number
         id: create_release
         uses: actions/create-release@latest
         env:
