@@ -95,19 +95,21 @@ func (s *statesService) getStatesRequest(endpoint string, timeParam time.Time, i
 	}
 
 	if timeParam, ok := checkTime(timeParam); ok {
-		req.URL.Query().Set("time", strconv.FormatInt(timeParam.Unix(), 10))
+		req.URL.Query().Add("time", strconv.FormatInt(timeParam.Unix(), 10))
 	}
 
 	if icao24, ok := checkString(icao24); ok {
-		req.URL.Query().Set("icao24", icao24)
+		req.URL.Query().Add("icao24", icao24)
 	}
+
+	req.URL.RawQuery = req.URL.Query().Encode()
 
 	return req, nil
 }
 
 // GetAllStates returns the response of /api/states/all
 func (s *statesService) GetAllStates(time time.Time, icao24 string) (StatesResponse, error) {
-	endpoint := "states/all"
+	endpoint := "/api/states/all"
 	req, err := s.getStatesRequest(endpoint, time, icao24)
 
 	if err != nil {
@@ -153,7 +155,7 @@ func (s *statesService) GetAllStates(time time.Time, icao24 string) (StatesRespo
 
 // GetOwnStates returns the response of /api/states/own
 func (s *statesService) GetOwnStates(time time.Time, icao24 string) (*StatesResponse, error) {
-	endpoint := "states/all"
+	endpoint := "/api/states/own"
 	req, err := s.getStatesRequest(endpoint, time, icao24)
 
 	if err != nil {

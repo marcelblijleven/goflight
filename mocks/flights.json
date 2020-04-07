@@ -1,0 +1,30 @@
+[
+  {
+    "icao24": "e48809",
+    "firstSeen": 1517227688,
+    "estDepartureAirport": null,
+    "lastSeen": 1517230273,
+    "estArrivalAirport": null,
+    "callsign": "TAM3533 ",
+    "estDepartureAirportHorizDistance": null,
+    "estDepartureAirportVertDistance": null,
+    "estArrivalAirportHorizDistance": null,
+    "estArrivalAirportVertDistance": null,
+    "departureAirportCandidatesCount": 0,
+    "arrivalAirportCandidatesCount": 0
+  },
+  {
+    "icao24": "e4904f",
+    "firstSeen": 1517229100,
+    "estDepartureAirport": null,
+    "lastSeen": 1517230425,
+    "estArrivalAirport": null,
+    "callsign": "AZU5291 ",
+    "estDepartureAirportHorizDistance": null,
+    "estDepartureAirportVertDistance": null,
+    "estArrivalAirportHorizDistance": null,
+    "estArrivalAirportVertDistance": null,
+    "departureAirportCandidatesCount": 0,
+    "arrivalAirportCandidatesCount": 0
+  }
+]

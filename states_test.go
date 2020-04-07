@@ -78,12 +78,12 @@ func TestStatesService_GetAllStates(t *testing.T) {
 
 	for _, tt := range getStatesInputs {
 		t.Run(tt.icao24Input, func(t *testing.T) {
+			client, err := goflight.NewClient("", "", mockClient)
 			u, _ := url.Parse("http://example.com")
-
-			client, err := goflight.NewClient("", "", mockClient, u)
+			goflight.SetBaseURL(client, u)
 
 			if err != nil {
-				t.Fatal("unexpected error in setting up Goflight Client")
+				t.Fatal("unexpected error in setting up Goflight client")
 			}
 
 			response, err := client.States.GetAllStates(tt.timeInput, tt.icao24Input)
@@ -119,12 +119,12 @@ func TestStatesService_GetOwnStates(t *testing.T) {
 
 	for _, tt := range getStatesInputs {
 		t.Run(tt.icao24Input, func(t *testing.T) {
+			client, err := goflight.NewClient("user", "password", mockClient)
 			u, _ := url.Parse("http://example.com")
-
-			client, err := goflight.NewClient("user", "password", mockClient, u)
+			goflight.SetBaseURL(client, u)
 
 			if err != nil {
-				t.Fatal("unexpected error in setting up Goflight Client")
+				t.Fatal("unexpected error in setting up Goflight client")
 			}
 
 			response, err := client.States.GetAllStates(tt.timeInput, tt.icao24Input)
@@ -153,28 +153,28 @@ func TestStatesService_GetOwnStates_Authentication(t *testing.T) {
 	mockClient, closeServer := HTTPTestClient(mockHandler)
 	defer closeServer()
 
-	client, err := goflight.NewClient("unauthorizedUser", "secret", mockClient, nil)
+	client, err := goflight.NewClient("unauthorizedUser", "secret", mockClient)
 
 	if err != nil {
-		t.Fatal("unexpected error in setting up Goflight Client")
+		t.Fatal("unexpected error in setting up Goflight client")
 	}
 
 	_, err = client.States.GetOwnStates(time.Time{}, "")
 
-	if !errors.As(err, &goflight.UnauthorizedAccessError) {
-		t.Errorf("expected error to be: %v", goflight.UnauthorizedAccessError.Error())
+	if !errors.As(err, &goflight.ErrUnauthorizedAccess) {
+		t.Errorf("expected error to be: %v", goflight.ErrUnauthorizedAccess.Error())
 	}
 
 	// Check for invalid credentials
-	client, err = goflight.NewClient("", "", mockClient, nil)
+	client, err = goflight.NewClient("", "", mockClient)
 
 	if err != nil {
-		t.Fatal("unexpected error in setting up Goflight Client")
+		t.Fatal("unexpected error in setting up Goflight client")
 	}
 
 	_, err = client.States.GetOwnStates(time.Time{}, "")
 
 	if !errors.Is(err, goflight.ErrInvalidCredentials) {
-		t.Errorf("expected error to be: %v", goflight.UnauthorizedAccessError.Error())
+		t.Errorf("expected error to be: %v", goflight.ErrUnauthorizedAccess.Error())
 	}
 }
